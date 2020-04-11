@@ -19,6 +19,7 @@ var numIslands = function(grid) {
       }
     }
   }
+  return islandNum
 }
 
 const infect = function(grid, i, j) {

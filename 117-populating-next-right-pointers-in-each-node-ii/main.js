@@ -42,5 +42,7 @@ function Node(val, left, right, next) {
 };
 
 const Tree = require('../utils/NewBinaryTree')
+const print = require('../utils/print')
+
 const root = Tree(1, 2, 3, 4, 5, null, 7)
-console.log(connect(root))
+print(connect(root))

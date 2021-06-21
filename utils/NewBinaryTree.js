@@ -31,13 +31,13 @@ function MakeTreeFromArray(...arr) {
 
             // 挂载左节点
             let next = nextNode()
-            if (next === null) return root
+            // if (next === null) return root
             node.left = next
             qNode.push(node.left)
 
             // 挂载右节点
             next = nextNode()
-            if (next === null) return root
+            // if (next === null) return root
             node.right = next
             qNode.push(node.right)
         }

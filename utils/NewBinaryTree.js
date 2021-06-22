@@ -1,3 +1,5 @@
+const print = require('./print')
+
 // 构造二叉树
 
 
@@ -16,12 +18,12 @@ function MakeTreeFromArray(...arr) {
     // 避免产生副作用
     const array = [...arr]
 
-    const nextNode = () => {
+    const buildNextNode = () => {
         const val = array.shift()
         return val ? new TreeNode(val) : null
     }
 
-    const root = nextNode()
+    const root = buildNextNode()
 
     const qNode = [root]
     while (qNode.length && array.length) {
@@ -29,17 +31,17 @@ function MakeTreeFromArray(...arr) {
         for (let j = 0; j < levelCount; j++) {
             const node = qNode.shift()
 
-            // 挂载左节点
-            let next = nextNode()
-            // if (next === null) return root
-            node.left = next
-            qNode.push(node.left)
+            const leftNode = buildNextNode()
+            qNode.push(leftNode)
+            if (node) {
+                node.left = leftNode
+            }
 
-            // 挂载右节点
-            next = nextNode()
-            // if (next === null) return root
-            node.right = next
-            qNode.push(node.right)
+            const rightNode = buildNextNode()
+            qNode.push(rightNode)
+            if (node) {
+                node.right = rightNode
+            }
         }
     }
 
@@ -54,7 +56,8 @@ function MakeTreeFromArray(...arr) {
 //   4   5 6   7
 //  /
 // 8
-// console.log(MakeTreeFromArray([1, 2, 3, 4, 5, 6, 7, 8]))
+// console.log(MakeTreeFromArray(1, 2, 3, 4, 5, 6, 7, 8))
+// print(MakeTreeFromArray(1, 2, null, 4, 5, 6, 7, 8))
 
 
 module.exports = MakeTreeFromArray

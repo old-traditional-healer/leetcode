@@ -19,8 +19,8 @@ var searchRange = function (nums, target) {
 
         return nums[left] === target ? left : -1
     }
-    const endIndex = (nums, target) => {
-        let left = 0, right = len - 1
+    const endIndex = (nums, target, leftStartIndex = 0) => {
+        let left = leftStartIndex, right = len - 1
 
         // 找到第一个大于 target 的值
         while (left < right) {
@@ -43,10 +43,10 @@ var searchRange = function (nums, target) {
         return end
     }
 
-    return [
-        starIndex(nums, target),
-        endIndex(nums, target)
-    ]
+    const start = starIndex(nums, target)
+    const end = endIndex(nums, target, start)
+
+    return [start, end]
 };
 
 

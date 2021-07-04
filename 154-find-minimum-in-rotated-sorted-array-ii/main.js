@@ -22,4 +22,5 @@ var findMin = function (nums) {
 
 // console.log(findMin([3, 1, 3]))
 // console.log(findMin([3, 3, 1, 3]))
-console.log(findMin([2, 0, 1, 1, 1]))
+// console.log(findMin([2, 0, 1, 1, 1]))
+console.log(findMin([1, 2, 3, 4, 5]))

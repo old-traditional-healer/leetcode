@@ -9,10 +9,9 @@ var firstUniqChar = function (s) {
         charMap[char] = charMap[char] ? (charMap[char] + 1) : 1
     }
 
-    const keys = Object.keys(charMap)
-    for (let i = 0; i < keys.length; i++) {
-        const element = keys[i]
-        if (charMap[element] === 1) {
+    for (let i = 0; i < s.length; i++) {
+        const char = s[i]
+        if (charMap[char] === 1) {
             return i
         }
     }
@@ -20,4 +19,4 @@ var firstUniqChar = function (s) {
     return -1
 };
 
-console.log(firstUniqChar('loveleetcode'))
+console.log(firstUniqChar('dddccdbba'))

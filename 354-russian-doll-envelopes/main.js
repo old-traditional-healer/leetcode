@@ -8,7 +8,7 @@ var maxEnvelopes = function (envelopes) {
         return a[0] === b[0] ? b[1] - a[1] : a[0] - b[0]
     })
 
-    // 2. 求宽度的最大递增子序列
+    // 2. 求宽度的最长递增子序列
     const heightArr = envelopes.map(i => i[1])
 
     const lengthOfLIS = nums => {

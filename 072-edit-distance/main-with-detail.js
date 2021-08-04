@@ -56,6 +56,8 @@ var minDistance = function (word1, word2) {
         console.log("dp[%s][%s]=%s, op=%s", i, j, ret, op)
         cache.set(key, ret)
 
+        // console.log(cache)
+
         return ret
     }
 

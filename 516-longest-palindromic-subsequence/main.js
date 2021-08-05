@@ -1,3 +1,6 @@
+// @see https://rovast.notion.site/6a2de8db92b543c5b8b6f8c6ca3ab7ff
+// @see https://leetcode-cn.com/problems/longest-palindromic-subsequence/
+
 /**
  * @param {string} s
  * @return {number}

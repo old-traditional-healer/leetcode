@@ -1,3 +1,6 @@
+// @see https://rovast.notion.site/a37af06172ea4d95ab6147125136f8e7
+// @see https://leetcode-cn.com/problems/4-keys-keyboard/
+
 var maxA = function (N) {
     const dp = new Array(N + 1).fill(0)
 

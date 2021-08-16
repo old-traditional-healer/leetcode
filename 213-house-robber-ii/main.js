@@ -1,5 +1,5 @@
 // @see https://leetcode-cn.com/problems/house-robber/
-// @see https://rovast.notion.site/b0249a29819f4e34bcb660e2ac490278
+// @see https://rovast.notion.site/II-0ef642df5f424c2b91a19272cf3dd714
 
 /**
  * @param {number[]} nums

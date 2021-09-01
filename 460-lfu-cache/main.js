@@ -60,17 +60,35 @@ LinkedList.prototype.isEmpty = function () {
     return this.head.next === this.tail
 }
 
+LinkedList.prototype.print = function () {
+    let str = '', node = this.head.next
+    while (node.next !== null) {
+        str += `${node.key}=${node.value},`
+        node = node.next
+    }
+    return str
+}
+
 /** 
  * @param {number} key
  * @return {number}
  */
 LFUCache.prototype.get = function (key) {
     if (this.cap < 1) return -1
-
-    if (!this.cache.has(key)) return -1
+    if (!this.cache.has(key)) {
+        console.log(`get(${key})=-1`)
+        this.print()
+        return -1
+    }
 
     this.increaseFreq(key)
-    return this.cache.get(key).value
+    const ret = this.cache.get(key).value
+    console.log('get(%s)=%s', key, ret)
+    if (ret === 11) {
+        console.log('===')
+    }
+    this.print()
+    return ret
 };
 
 /** 
@@ -81,9 +99,12 @@ LFUCache.prototype.get = function (key) {
 LFUCache.prototype.put = function (key, value) {
     if (this.cap < 1) return null
 
+    console.log('put(%s,%s)', key, value)
+
     if (this.cache.has(key)) {
         this.cache.get(key).value = value
         this.increaseFreq(key)
+        this.print()
         return
     }
 
@@ -92,6 +113,7 @@ LFUCache.prototype.put = function (key, value) {
     }
 
     this.insertNewNode(key, value)
+    this.print()
 };
 
 
@@ -136,7 +158,8 @@ LFUCache.prototype.increaseFreq = function (key) {
     this.freqToNodes.get(freq).remove(node)
     this.insertNodeToFreq(node, freq + 1)
 
-    if (this.freqToNodes.get(freq).isEmpty()) {
+    if (this.freqToNodes.get(freq).isEmpty() && this.minFreq === freq) {
+        console.warn('freq[%s] is empty, and minFreq update=', freq, this.minFreq + 1)
         this.minFreq = freq + 1
     }
 }
@@ -147,8 +170,18 @@ LFUCache.prototype.increaseFreq = function (key) {
 LFUCache.prototype.removeMinFreqNode = function () {
     const removedNode = this.freqToNodes.get(this.minFreq).removeTail()
 
+    console.log('delete(%s,%s)', removedNode.key, removedNode.value)
     this.cache.delete(removedNode.key)
     this.keyToFreq.delete(removedNode.key)
+}
+
+LFUCache.prototype.print = function () {
+    let str = ''
+    this.freqToNodes.forEach((list, freq) => {
+        str += `[${freq}]${list.print()}`
+    })
+
+    console.log('PRINT:', str)
 }
 
 /**
@@ -192,7 +225,32 @@ const params = [
     [5], [4], [11, 4], [12, 24], [5, 18], [13], [7, 23], [8], [12], [3, 27], [2, 12],
     [5], [2, 9], [13, 4], [8, 18], [1, 7], [6], [9, 29], [8, 21], [5], [6, 30], [1, 12],
     [10], [4, 15], [7, 22], [11, 26], [8, 17], [9, 29], [5], [3, 4], [11, 30], [12], [4, 29], // 出问题了
-    [3], [9], [6], [3, 4], [1], [10], [3, 29], [10, 28], [1, 20], [11, 13], [3], [3, 12], [3, 8], [10, 9], [3, 26], [8], [7], [5], [13, 17], [2, 27], [11, 15], [12], [9, 19], [2, 15], [3, 16], [1], [12, 17], [9, 1], [6, 19], [4], [5], [5], [8, 1], [11, 7], [5, 2], [9, 28], [1], [2, 2], [7, 4], [4, 22], [7, 24], [9, 26], [13, 28], [11, 26]]
+    [3], [9], [6], [3, 4], [1], [10], [3, 29], [10, 28], [1, 20], [11, 13], [3], [3, 12], [3, 8], [10, 9], [3, 26], [8], [7], [5], [13, 17], [2, 27], [11, 15], [12], [9, 19], [2, 15], [3, 16], [1], [12, 17], [9, 1], [6, 19], [4], [5], [5], [8, 1], [11, 7], [5, 2], [9, 28], [1], [2, 2], [7, 4], [4, 22], [7, 24], [9, 26], [13, 28], [11, 26]];
+
+const output2 = [null, // new LFUCache(10)
+    null, // put(10,13) [1]10=3,
+    null, // put(3,17) [1]3=17, [1]10=3
+    null, // put(6,11) [1]6=11, [1]3=17, [1]10=3
+    null, // put(10,5) [1]10=5, [1]6=11, [1]3=17, [1]10=3
+    null, // put(9,10) [1]9=10, [1]6=11, [1]3=17, [1]10=3
+    -1,   // get(13) -1 
+    null, // put(2,19) [1]2=19, [1]9=10, [1]6=11, [1]3=17, [1]10=3
+    19,   // get(2),
+    17,
+    null, -1, null, null, null, -1, null, -1, 5, -1, 12, null,
+    null, 3, 5, 5, null, null, 1, null, -1, null, 30,
+    5, 30, null, null, null, -1, null, -1, 24, null, null,
+    18, null, null, null, null, 14, null, null, 18, null, null,
+    11, null, null, null, null, null, 18, null, null, -1,
+    null, 4, 29, 30, null, 12, 11, null, null, null, null, 29,
+    null, null, null, null, 17, -1, 18, null, null, null, -1,
+    null, null, null, 20, null, null, null, 29, 18, 18, null,
+    null, null, null, 20, null, null, null, null, null, null, null]
+
+
+
+
+
 
 let lFUCache
 let result = []
@@ -222,7 +280,7 @@ const expected = [null, null, null, null, null, null, -1, null, 19, 17,
     4, 29, -1, null, 12, -1, null, null, null, null, 29,
     null, null, null, null, 17, 22, -1, null, null, null, 24,
     null, null, null, 20, null, null, null, 29, -1, -1, null,
-    null, null, null, 20, null, null, null, null, null, null, null]
+    null, null, null, 20, null, null, null, null, null, null, null];
 
 
 const output = [null, null, null, null, null, null, -1, null, 19, 17,
@@ -230,8 +288,8 @@ const output = [null, null, null, null, null, null, -1, null, 19, 17,
     null, 3, 5, 5, null, null, 1, null, -1, null, 30,
     5, 30, null, null, null, -1, null, -1, 24, null, null,
     18, null, null, null, null, 14, null, null, 18, null, null,
-    11, null, null, null, null, null, 18, null, null, -1,
-    null, 4, 29, 30, null, 12, 11, null, null, null, null, 29,
+    11, null, null, null, null, null, 18, null, null, -1, null, 
+    4, 29, 30, null, 12, 11, null, null, null, null, 29,
     null, null, null, null, 17, -1, 18, null, null, null, -1,
     null, null, null, 20, null, null, null, 29, 18, 18, null,
     null, null, null, 20, null, null, null, null, null, null, null]
